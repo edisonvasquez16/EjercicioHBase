@@ -1,4 +1,4 @@
-package example.actions;
+package example.interactions;
 
 import org.apache.hadoop.hbase.NamespaceNotFoundException;
 import org.apache.hadoop.hbase.client.Admin;

@@ -1,4 +1,4 @@
-package example.actions;
+package example.interactions;
 
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.Table;

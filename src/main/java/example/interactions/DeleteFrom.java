@@ -1,4 +1,4 @@
-package example.actions;
+package example.interactions;
 
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Admin;
@@ -9,14 +9,10 @@ public class DeleteFrom {
 
     public static void namespaceAndTable(final Admin admin, TableName tableName) throws IOException {
         if (admin.tableExists(tableName)) {
-            System.out.println("Disabling/deleting Table [" + tableName + "].");
+            System.out.println("Deleting Table [" + tableName + "].");
             admin.disableTable(tableName);
             admin.deleteTable(tableName);
         }
-        /*if (Validate.namespaceExists(admin, nameSpace)) {
-            System.out.println("Deleting Namespace [" + nameSpace + "].");
-            admin.deleteNamespace(nameSpace);
-        }*/
     }
 
 }

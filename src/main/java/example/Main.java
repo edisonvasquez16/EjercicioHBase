@@ -1,6 +1,7 @@
 package example;
 
-import example.actions.*;
+import example.actions.InsertData;
+import example.interactions.*;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Connection;
@@ -11,17 +12,14 @@ import org.apache.hadoop.hbase.util.Bytes;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Objects;
 
 public class Main {
 
-    static String NAMESPACE = "HBaseBD";
-    static TableName TABLE = TableName.valueOf("TableEnvios");
-    static byte[] COLUMN_FAMILY;
-    static byte[] COLUMN_QUALIFIER;
-    static byte[] ROW_ID;
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    protected static String NAMESPACE = "HBaseBD";
+    protected static TableName TABLE = TableName.valueOf("TablaEnvios");
+    protected static byte[] COLUMN_QUALIFIER;
+    protected static byte[] ROW_ID;
+    protected static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
     public static void main(final String[] args) throws IOException {
         try (Connection connection = ConnectionFactory.createConnection();
@@ -35,47 +33,11 @@ public class Main {
                         "2. GET DATA FOR ROW_KEY \n" +
                         "3. DELETE ROW \n" +
                         "4. DELETE TABLE DEFAULT \n" +
-                        "5. EXIT \n");
+                        "5. GET INFO LAST MONTH \n");
                 option = Integer.parseInt(br.readLine());
                 switch (option) {
                     case 1:
-                        System.out.println("Row key for register: ");
-                        ROW_ID = captureString();
-
-                        String addFamily = "";
-                        ArrayList<byte[]> columnsFamily = new ArrayList<>();
-                        ArrayList<ArrayList<byte[]>> map = new ArrayList<>();
-                        while (!Objects.equals(addFamily, "EXIT")) {
-                            String addColumn = "";
-                            System.out.println("Column Family Name: (For terminate write EXIT)");
-                            byte[] familyColumnValue = captureString();
-                            if (!Bytes.toString(familyColumnValue).equals("EXIT")) {
-                                columnsFamily.add(familyColumnValue);
-                                while (!Objects.equals(addColumn, "EXIT")) {
-                                    ArrayList<byte[]> fields = new ArrayList<>();
-                                    System.out.println("Column Qualifier Name: (For terminate write EXIT)");
-                                    System.out.println("Qualifier: ");
-                                    COLUMN_QUALIFIER = captureString();
-                                    if (!Bytes.toString(COLUMN_QUALIFIER).equals("EXIT")) {
-                                        fields.add(COLUMN_QUALIFIER);
-                                        System.out.println("Value: ");
-                                        String value = br.readLine();
-                                        fields.add(Bytes.toBytes(value));
-                                        fields.add(familyColumnValue);
-                                        map.add(fields);
-                                    } else {
-                                        addColumn = "EXIT";
-                                    }
-                                }
-                            } else {
-                                addFamily = Bytes.toString(familyColumnValue);
-                            }
-                        }
-
-                        Create.namespaceAndTable(admin, NAMESPACE, TABLE, columnsFamily);
-                        try (Table table = connection.getTable(TABLE)) {
-                            PutRow.rowToTable(table, ROW_ID, map);
-                        }
+                        InsertData.inTable(admin, connection);
                         break;
                     case 2:
                         System.out.println("Row key for register get: ");
@@ -91,9 +53,14 @@ public class Main {
                         }
                         break;
                     case 4:
-                        DeleteFrom.namespaceAndTable(admin, TABLE);
+                        //DeleteFrom.namespaceAndTable(admin, TABLE);
                         break;
                     case 5:
+                        try (Table table = connection.getTable(TABLE)) {
+                            GetInfo.toLastMonth(table);
+                        }
+                        break;
+                    case 10:
                         System.out.println("EXIT SUCCESSFULLY");
                         break;
                     default:
@@ -102,10 +69,9 @@ public class Main {
                 }
             }
         }
-
     }
 
-    private static byte[] captureString() throws IOException {
+    protected static byte[] captureString() throws IOException {
         return Bytes.toBytes(br.readLine());
     }
 }

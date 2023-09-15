@@ -1,4 +1,4 @@
-package example.actions;
+package example.interactions;
 
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Table;
@@ -19,7 +19,6 @@ public class PutRow {
                                 + "Family: [" + Bytes.toString(fields.get(2)) + " \n"
                                 + "Data: [" + Bytes.toString(fields.get(0)) + " : "
                                 + Bytes.toString(fields.get(1)));
-
                     } catch (Exception e) {
                         System.out.println(e);
                     }

@@ -1,4 +1,4 @@
-package example.actions;
+package example.interactions;
 
 import org.apache.hadoop.hbase.NamespaceDescriptor;
 import org.apache.hadoop.hbase.TableName;
