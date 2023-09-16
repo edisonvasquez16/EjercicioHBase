@@ -30,20 +30,24 @@ public class Main {
             while (option != 5) {
                 System.out.println("SELECT THE OPTION TO EXECUTE: \n" +
                         "1. INSERT DATA IN TABLE \n" +
-                        "2. GET DATA FOR ROW_KEY \n" +
+                        "2. GET DATA FOR EMAIL \n" +
                         "3. DELETE ROW \n" +
                         "4. DELETE TABLE DEFAULT \n" +
-                        "5. GET INFO LAST MONTH \n");
+                        "5. GET INFO LAST MONTH \n" +
+                        "6. LIST SHIPMENTS WITH PACKAGES STATUS TO BE PROGRAMEED \n" +
+                        "7. LIST THIS YEAR'S SHIPMENTS WITH SENSITIVE DESCRIPTION \n" +
+                        "8. LIST SHIPMENTS LAST MONTH \n");
                 option = Integer.parseInt(br.readLine());
                 switch (option) {
                     case 1:
                         InsertData.inTable(admin, connection);
                         break;
                     case 2:
-                        System.out.println("Row key for register get: ");
+                        System.out.println("Email of register get: ");
                         ROW_ID = captureString();
+                        //String email = br.readLine();
                         try (Table table = connection.getTable(TABLE)) {
-                            GetInfo.allColumns(table, ROW_ID);
+                            GetInfo.allInfo(table, ROW_ID);
                         }
                         break;
                     case 3:
@@ -58,6 +62,21 @@ public class Main {
                     case 5:
                         try (Table table = connection.getTable(TABLE)) {
                             GetInfo.toLastMonth(table);
+                        }
+                        break;
+                    case 6:
+                        try (Table table = connection.getTable(TABLE)) {
+                            GetInfo.listShipmentsWithPackagesStatusToBeProgrammed(table);
+                        }
+                        break;
+                    case 7:
+                        try (Table table = connection.getTable(TABLE)) {
+                            GetInfo.listShipmentsWithPackagesWithDelicateDescription(table);
+                        }
+                        break;
+                    case 8:
+                        try (Table table = connection.getTable(TABLE)) {
+                            GetInfo.listShipmentsLastMonth(table);
                         }
                         break;
                     case 10:
